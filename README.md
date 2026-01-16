@@ -1,6 +1,6 @@
 # A Melody of Thought
 
-A digital archive preserving the poetry of **J. Leland Hall** (1920-1996), written between 1942 and 1995 in Clarksville, Arkansas.
+A digital archive preserving the poetry of **J. Leland Hall** written between 1942 and 1995 in Clarksville, Arkansas.
 
 ## About
 
