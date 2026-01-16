@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Read poems data
-const poemsData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'digitizer', 'poems.json'), 'utf8'));
+const poemsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'poems.json'), 'utf8'));
 
 // Extract all poems into a flat array
 const poems = [];
@@ -19,12 +19,12 @@ for (const [imageKey, poemList] of Object.entries(poemsData)) {
   }
 }
 
-// Get all graphics (flourishes)
-const graphicsDir = path.join(__dirname, '..', 'Graphics');
+// Get all graphics (flourishes) from public/graphics
+const graphicsDir = path.join(__dirname, 'public', 'graphics');
 const graphics = fs.readdirSync(graphicsDir).filter(f => f.endsWith('.jpg')).sort().map(f => `graphics/${f}`);
 
-// Get all available images
-const imagesDir = path.join(__dirname, '..', 'images');
+// Get all available images from public/images
+const imagesDir = path.join(__dirname, 'public', 'images');
 const allImages = [];
 const bookDirs = fs.readdirSync(imagesDir).filter(d => d.startsWith('book-'));
 for (const bookDir of bookDirs) {
@@ -147,32 +147,9 @@ processedPoems.forEach((poem, idx) => {
   poem.decorativeImage = poem.sourceImage;
 });
 
-// Create output directory
+// Output directory (images and graphics already exist there)
 const outputDir = path.join(__dirname, 'public');
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-
-// Copy images
-const imgOutputDir = path.join(outputDir, 'images');
-if (!fs.existsSync(imgOutputDir)) fs.mkdirSync(imgOutputDir, { recursive: true });
-
-for (const bookDir of bookDirs) {
-  const srcBookDir = path.join(imagesDir, bookDir);
-  const destBookDir = path.join(imgOutputDir, bookDir);
-  if (!fs.existsSync(destBookDir)) fs.mkdirSync(destBookDir, { recursive: true });
-
-  const images = fs.readdirSync(srcBookDir).filter(f => f.endsWith('.jpg'));
-  for (const img of images) {
-    fs.copyFileSync(path.join(srcBookDir, img), path.join(destBookDir, img));
-  }
-}
-
-// Copy graphics
-const graphicsOutputDir = path.join(outputDir, 'graphics');
-if (!fs.existsSync(graphicsOutputDir)) fs.mkdirSync(graphicsOutputDir, { recursive: true });
-const graphicsSrc = fs.readdirSync(graphicsDir).filter(f => f.endsWith('.jpg'));
-for (const img of graphicsSrc) {
-  fs.copyFileSync(path.join(graphicsDir, img), path.join(graphicsOutputDir, img));
-}
 
 // Helper to escape HTML
 function escapeHtml(text) {
