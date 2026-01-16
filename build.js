@@ -256,6 +256,7 @@ body {
   padding: 0.5rem 1rem;
   border: 1px solid var(--border);
   background: var(--paper);
+  color: var(--ink);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -289,6 +290,7 @@ body {
   padding: 0.5rem 1rem;
   border: 2px solid var(--border);
   background: var(--paper);
+  color: var(--ink);
   width: 220px;
 }
 
@@ -303,6 +305,7 @@ body {
   padding: 0.5rem 0.75rem;
   border: 2px solid var(--border);
   background: var(--paper);
+  color: var(--ink);
   cursor: pointer;
 }
 
@@ -552,6 +555,7 @@ body {
   padding: 0.5rem 1rem;
   border: 1px solid var(--border);
   background: var(--paper);
+  color: var(--ink);
   cursor: pointer;
   transition: all 0.2s;
 }
