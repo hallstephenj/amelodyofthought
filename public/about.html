@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — A Melody of Thought</title>
+  <style>
+:root {
+  --paper: #f5f0e6;
+  --ink: #1a1a1a;
+  --ink-light: #4a4a4a;
+  --accent: #2a2a2a;
+  --border: #3a3a3a;
+}
+
+@font-face {
+  font-family: 'Typewriter';
+  src: local('American Typewriter'), local('Courier New'), local('monospace');
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.01) 2px,
+    rgba(0,0,0,0.01) 4px
+  );
+  z-index: 1000;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Header */
+.site-header {
+  text-align: center;
+  padding: 3rem 1rem;
+  border-bottom: 3px double var(--border);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.site-header::before,
+.site-header::after {
+  content: '✦';
+  position: absolute;
+  top: 1rem;
+  font-size: 1.5rem;
+  color: var(--ink-light);
+}
+
+.site-header::before { left: 2rem; }
+.site-header::after { right: 2rem; }
+
+.site-title {
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  font-weight: normal;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.site-subtitle {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink-light);
+  margin-bottom: 1rem;
+}
+
+.author-name {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  border: 2px solid var(--border);
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Navigation */
+nav {
+  text-align: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+nav a {
+  color: var(--ink);
+  text-decoration: none;
+  margin: 0 1rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+nav a:hover,
+nav a.active {
+  border-bottom-color: var(--ink);
+}
+
+/* Filters */
+.filters {
+  text-align: center;
+  padding: 1.5rem;
+  border: 2px solid var(--border);
+  margin-bottom: 2rem;
+  background: rgba(255,255,255,0.5);
+}
+
+.filter-label {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--ink-light);
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.tag:hover,
+.tag.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Year selector */
+.year-nav {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.year-nav select {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+/* Poem cards */
+.poem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.poem-card {
+  border: 2px solid var(--border);
+  padding: 2rem;
+  position: relative;
+  background: var(--paper);
+  page-break-inside: avoid;
+}
+
+.poem-card::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+.poem-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.poem-title {
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.poem-year {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+}
+
+.poem-content {
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.poem-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.poem-tag {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--ink-light);
+  color: var(--ink-light);
+  text-decoration: none;
+}
+
+.poem-tag:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* Decorative images */
+.decorative-image {
+  display: block;
+  max-width: 100%;
+  margin: 2rem auto;
+  border: 3px solid var(--border);
+  filter: grayscale(100%) contrast(1.2);
+  opacity: 0.9;
+}
+
+.page-divider {
+  text-align: center;
+  margin: 3rem 0;
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  letter-spacing: 1rem;
+}
+
+/* Single poem page */
+.poem-single {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.poem-single .poem-content {
+  font-size: 1.15rem;
+  line-height: 2;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-link:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-top: 3rem;
+  border-top: 3px double var(--border);
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.05em;
+}
+
+.footer-ornament {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5rem;
+}
+
+/* Decorative elements */
+.ornament {
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.5rem;
+  color: var(--ink-light);
+  margin: 2rem 0;
+}
+
+.flourish {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+/* Print styles */
+@media print {
+  body { background: white; }
+  .filters, nav, .back-link { display: none; }
+  .poem-card { break-inside: avoid; border-width: 1px; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .site-title { font-size: 1.8rem; }
+  .container { padding: 1rem; }
+  .poem-card { padding: 1.5rem; }
+  nav a { margin: 0 0.5rem; display: inline-block; margin-bottom: 0.5rem; }
+}
+
+/* Image gallery spacing */
+.image-break {
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.image-break img {
+  max-width: 80%;
+  max-height: 400px;
+  object-fit: contain;
+  border: 4px double var(--border);
+  padding: 8px;
+  background: white;
+  filter: grayscale(100%) contrast(1.1);
+}
+
+.image-caption {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-light);
+  margin-top: 0.75rem;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">A Melody of Thought</h1>
+      <p class="site-subtitle">About This Collection</p>
+      <div class="author-name">J. Leland Hall</div>
+    </header>
+
+    <nav>
+      <a href="index.html">All Poems</a>
+      <a href="by-year.html">By Year</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <main class="poem-single">
+      <div class="poem-card">
+        <div class="poem-content" style="text-align: left; font-style: italic;">
+"Over the years I have felt the urge
+in moments of reflection, to 'poem-
+ize'. Everyone must feel this way
+occasionally.
+
+This compilation has collected in
+my files, and represents a variety of
+subjects and moods.
+
+As your thoughts shall share
+moments with my thoughts, may
+your life be strengthened."
+
+— J. Leland Hall
+   Clarksville, Arkansas
+   1957
+        </div>
+      </div>
+
+      <div class="image-break">
+        <img src="images/book-1/page-01.jpg" alt="Original manuscript" loading="lazy">
+        <div class="image-caption">From the original collection</div>
+      </div>
+
+      <div class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">About This Archive</h2>
+        </header>
+        <div class="poem-content" style="text-align: left;">
+This digital archive preserves the poetry of J. Leland Hall, written between 1942 and 1995. The poems were originally collected in hand-typed booklets, photocopied and shared with family and friends.
+
+The collection spans over five decades of verse, touching on themes of faith, family, service, and the quiet moments of reflection that mark a life well-lived.
+
+This website was created to honor his memory and ensure these words continue to be shared with future generations.
+
+<strong>197 poems</strong> from <strong>124 original pages</strong>
+        </div>
+      </div>
+
+      <div class="image-break">
+        <img src="images/book-1/page-03.jpg" alt="Original manuscript" loading="lazy">
+        <div class="image-caption">Original typescript pages</div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-ornament">❧ ❧ ❧</div>
+      <p>The poetry of J. Leland Hall</p>
+      <p>Clarksville, Arkansas</p>
+      <p>1942 — 1995</p>
+    </footer>
+  </div>
+</body>
+</html>

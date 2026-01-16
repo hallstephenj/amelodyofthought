@@ -1,0 +1,3843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joy — A Melody of Thought</title>
+  <style>
+:root {
+  --paper: #f5f0e6;
+  --ink: #1a1a1a;
+  --ink-light: #4a4a4a;
+  --accent: #2a2a2a;
+  --border: #3a3a3a;
+}
+
+@font-face {
+  font-family: 'Typewriter';
+  src: local('American Typewriter'), local('Courier New'), local('monospace');
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.01) 2px,
+    rgba(0,0,0,0.01) 4px
+  );
+  z-index: 1000;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Header */
+.site-header {
+  text-align: center;
+  padding: 3rem 1rem;
+  border-bottom: 3px double var(--border);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.site-header::before,
+.site-header::after {
+  content: '✦';
+  position: absolute;
+  top: 1rem;
+  font-size: 1.5rem;
+  color: var(--ink-light);
+}
+
+.site-header::before { left: 2rem; }
+.site-header::after { right: 2rem; }
+
+.site-title {
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  font-weight: normal;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.site-subtitle {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink-light);
+  margin-bottom: 1rem;
+}
+
+.author-name {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  border: 2px solid var(--border);
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Navigation */
+nav {
+  text-align: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+nav a {
+  color: var(--ink);
+  text-decoration: none;
+  margin: 0 1rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+nav a:hover,
+nav a.active {
+  border-bottom-color: var(--ink);
+}
+
+/* Filters */
+.filters {
+  text-align: center;
+  padding: 1.5rem;
+  border: 2px solid var(--border);
+  margin-bottom: 2rem;
+  background: rgba(255,255,255,0.5);
+}
+
+.filter-label {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--ink-light);
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.tag:hover,
+.tag.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Year selector */
+.year-nav {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.year-nav select {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+/* Poem cards */
+.poem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.poem-card {
+  border: 2px solid var(--border);
+  padding: 2rem;
+  position: relative;
+  background: var(--paper);
+  page-break-inside: avoid;
+}
+
+.poem-card::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+.poem-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.poem-title {
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.poem-year {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+}
+
+.poem-content {
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.poem-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.poem-tag {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--ink-light);
+  color: var(--ink-light);
+  text-decoration: none;
+}
+
+.poem-tag:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* Decorative images */
+.decorative-image {
+  display: block;
+  max-width: 100%;
+  margin: 2rem auto;
+  border: 3px solid var(--border);
+  filter: grayscale(100%) contrast(1.2);
+  opacity: 0.9;
+}
+
+.page-divider {
+  text-align: center;
+  margin: 3rem 0;
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  letter-spacing: 1rem;
+}
+
+/* Single poem page */
+.poem-single {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.poem-single .poem-content {
+  font-size: 1.15rem;
+  line-height: 2;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-link:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-top: 3rem;
+  border-top: 3px double var(--border);
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.05em;
+}
+
+.footer-ornament {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5rem;
+}
+
+/* Decorative elements */
+.ornament {
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.5rem;
+  color: var(--ink-light);
+  margin: 2rem 0;
+}
+
+.flourish {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+/* Print styles */
+@media print {
+  body { background: white; }
+  .filters, nav, .back-link { display: none; }
+  .poem-card { break-inside: avoid; border-width: 1px; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .site-title { font-size: 1.8rem; }
+  .container { padding: 1rem; }
+  .poem-card { padding: 1.5rem; }
+  nav a { margin: 0 0.5rem; display: inline-block; margin-bottom: 0.5rem; }
+}
+
+/* Image gallery spacing */
+.image-break {
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.image-break img {
+  max-width: 80%;
+  max-height: 400px;
+  object-fit: contain;
+  border: 4px double var(--border);
+  padding: 8px;
+  background: white;
+  filter: grayscale(100%) contrast(1.1);
+}
+
+.image-caption {
+  font-family: 'Typewriter', 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-light);
+  margin-top: 0.75rem;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">A Melody of Thought</h1>
+      <p class="site-subtitle">Poems on Joy</p>
+      <div class="author-name">J. Leland Hall</div>
+    </header>
+
+    <nav>
+      <a href="index.html">All Poems</a>
+      <a href="by-year.html">By Year</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <section class="filters">
+      <span class="filter-label">Browse by Theme</span>
+      <div class="filter-tags">
+        <a href="tag-comfort.html" class="tag ">comfort</a><a href="tag-faith.html" class="tag ">faith</a><a href="tag-family.html" class="tag ">family</a><a href="tag-hope.html" class="tag ">hope</a><a href="tag-joy.html" class="tag active">joy</a><a href="tag-life.html" class="tag ">life</a><a href="tag-love.html" class="tag ">love</a><a href="tag-miscellaneous.html" class="tag ">miscellaneous</a><a href="tag-nature.html" class="tag ">nature</a><a href="tag-reflection.html" class="tag ">reflection</a><a href="tag-service.html" class="tag ">service</a>
+      </div>
+    </section>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <main class="poem-list">
+      
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">SOMEDAY</h2>
+          <div class="poem-year">1942</div>
+        </header>
+        <div class="poem-content">Despite the way we're treated here,
+By all the turmoil, boss and crew,
+I find a satisfaction true
+Mid rolling ship and jutting pier.
+
+Someday our group shall look afar
+Out on the blue and see a twrill [sic]
+Of rising smoke and then the whoril
+From mystic wings down from a star.
+
+At last our long-sought ship shall
+come,
+And laborers gain their full reward.
+The sweet content of rest unmarred
+In staterooms on a ship of some
+
+Outstanding merchantman of whom
+We've heard would come for HIS
+someday
+To take us and to let us say,
+'A dockman's heaven', and there's
+room
+
+For everyone who seeks the goals
+Of rest, and peace, and joy for Souls.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">YIELDING</h2>
+          <div class="poem-year">1949</div>
+        </header>
+        <div class="poem-content">I will yield to Jesus,
+Today he calls to me;
+He will take my burden
+And cause me to be free.
+Come, O Holy Spirit
+To feel and meet my need,
+Tear down every barrier
+Help me to yield indeed.
+Yielding brings refreshing;
+I now must be so cleansed...
+I, just now receive Him,
+My soul cries out, Amen!
+You who would take Jesus
+Will find that yielding brings
+Joyous soul releasing
+And hearts that shout and sing.
+Banish doubts restraining
+And enter yielded bliss
+You will find great pardon
+If Satan you resist.
+
+I'm yielding to Jesus
+Yielding to His own will,
+Won't you come and join me?
+He waits as He calls you still.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THE GRACIOUS LORD</h2>
+          <div class="poem-year">1950</div>
+        </header>
+        <div class="poem-content">Gracious Salvation, I am the Lord's,
+His life and mine are now one ac-
+    cord.
+How my soul thrills with pleasure
+    and love,
+Keeps me uplooking to Him above.
+Gracious Deliverance from sin and
+    woe
+Evil's put down, God's power will
+    hold.
+Never forsaken, conqueror of sin,
+No more soul misery, yes he does
+    win.
+Gracious Redemption, saved ever-
+    more
+Christ will not leave me outside
+    the door.
+He keeps and lifts his own from
+    despair;
+I'll reign with Christ Jesus forever
+    there.
+
+Glorious Saviour, sufficient friend,
+Wonderful hope, it never shall end;
+Beautiful mansions for me on high
+Happy reunion there bye and bye.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">REPENTANCE</h2>
+          <div class="poem-year">1951</div>
+        </header>
+        <div class="poem-content">I now repent, for this I must,
+The world and gain refuse.
+I turn from shaded darkened lust
+And worldly treasures lose.
+Except YE turn from sin and death,
+Ye then shall perish all.
+Resist, forsake the ways of him
+Who causes men to fall.
+If you are troubled, torn and hurt,
+Then turn about today--
+You'll joy find, with peace sublime
+Within the Saviour's way.
+You can change, you must turn, re-
+pentance...
+Will make your whole life over.
+To Jesus, take Jesus, trust Jesus;
+Who saves and keeps forever.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">FUTURE HOPE</h2>
+          <div class="poem-year">1952</div>
+        </header>
+        <div class="poem-content">I know that I shall never see
+The fullness of Eternity
+While here on Earth.
+There goes with every passing year
+Life wasted, bringing sorrow's tear
+With spiritual death.
+Keep pressing on, the final page
+Brings happiness; entreat old age
+With joyous mirth.
+Hereafter we have much in store
+Time fades before an open door,
+What untold worth!
+For to the fading, listless end
+We gain our Victory's dividend...
+Perpetual rebirth!</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">ODE TO POSTERITY</h2>
+          <div class="poem-year">1953</div>
+        </header>
+        <div class="poem-content">Is is good or is it bad,
+To be happy, to be sad?
+Who can judge good from evil--
+Friend from foe--saint from devil?
+All this joust and hol'balloo
+Tempest times we're passing through
+Way off balance, all off key
+Confused, distorted misery.
+Where to turn...who can answer,
+Scholar, Merchant, Lawyer, Dancer?
+The Church asleep; Divines turned
+'pro'?
+Seclusion's corner? Picture show?
+Futile, empty, vain expression,
+Dire defeat, sure depression,
+Pessimism personified.
+You take over...I'm tired...I've tried!
+I live again...the answer's there!
+Self-death gives Life; with others
+share.
+God lives, Christ reigns, throw off
+these chains.
+Faith conquers all, and heaven gains.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">HEAVENLY FATHER</h2>
+          <div class="poem-year">1956</div>
+        </header>
+        <div class="poem-content">FAITH
+I thought again on God today,
+But who He is I cannot say;
+I find myself to be quite blind
+When searching for him in my mind.
+
+HOPE
+With earnest choice, determined will
+I could not help but seek him still
+I long to feel his strong embrace
+I yield unto his sovereign grace.
+
+LOVE
+My heart reached out in solitude
+And there in deepest gratitude
+I sensed his presence, felt his smile
+Filled with his power all the while.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THE LOST ONE</h2>
+          <div class="poem-year">1957</div>
+        </header>
+        <div class="poem-content">(Awareness)
+The silence of God roars in my soul,
+Anxious and desperate, I would be whole;
+I looked for new Hope, Peace and Delight,
+Help me to safety, pity my plight!
+
+(Conviction)
+Will the night pass, must I grope on,
+Is there a victory in God's Son?
+I am a culprit, victim of sin,
+Helpless, distorted, broken within.
+
+(Repentance)
+Deal with my soul, plead with my spirit,
+Eternal Life I never can merit;
+Save me dear Christ, I offer my life,
+Forgive my sins and long-wicked strife.
+
+(Release)
+Thanks be to God who hears even me,
+Victory is mine, now I can see!
+Yes, from today Jesus is mine,
+..as the stars forever will shine.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">CONTRASTS</h2>
+          <div class="poem-year">1959</div>
+        </header>
+        <div class="poem-content">Troubled Conscience? Black Accuser...
+Deeds of night, brain abuser!
+Tangled threads, jumbled thinking;
+Erstwhile Villian: slowly sinking!
+
+Easy Conscience? Not a loser,
+Daylight sparkles, Mind amuser,
+Straightened Soul, no more jumble,
+Oh so happy, cannot grumble.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">SERIOUS JOYS</h2>
+          <div class="poem-year">1962</div>
+        </header>
+        <div class="poem-content">I delight, as well I might
+In making words my amusement;
+Yet I have heard, that by my words
+Someday I shall come into judgment!
+
+It's fun to think, and run the rink
+Of ideas all to my pleasure;
+Still, with my mind, I'm apt to find
+Soundness leads to full-measure.
+
+The biggest thrill of all is still
+To delve within one's spirit:
+For what we are, can mend or mar,
+And gain or lose God's merit.
+
+The greatest joy for girl and boy,
+Or youth or grown-up, musing,
+Is a worthy goal, with strength untold
+To carry out God's choosing!
+
+J. L. Hall
+
+No matter what my lot shall be,
+I've written verses with much glee,
+That I shall be contented ever,
+Just to be read...not just to be clever.
+
+A line that causes thoughts to flow
+Or makes sad faces turn and glow,
+This is all I hope, you see...
+Sometimes the product, pleasantly,
+If there is more I hope to gain,
+My thoughts live on, in calm refrain.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WORTHWHILE LIVING</h2>
+          <div class="poem-year">1963</div>
+        </header>
+        <div class="poem-content">The fruit of our labors hardly bring joys,
+For they are passed on to our girls and boys.
+We find little pleasure in earning our pay
+A sordid condition, such a derelict way!
+
+But come now, we do! What I've said isn't true,
+It's a pleasure to earn, to go so on to ensue
+All the thrills of accomplishment, vict'ry,
+and gain,
+When we pass it all on, it's not any strain.
+
+Easy come and easy go, all of life's a gift,
+There's no reason for face being mift,
+E're life has passed on, we must learn to
+share,
+What's ours was a blessing, and sharing is
+care!</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">HAPPY ANNIVERSARY!</h2>
+          <div class="poem-year">1965</div>
+        </header>
+        <div class="poem-content">Remember many years ago
+When on a concrete step
+I kissed away my liberty;
+You won my heart in depth?
+
+And later in the Park, alone,
+I said, &quot;We'll married be?&quot;
+Ah, you accepted then my love
+In perfect conscience free.
+
+A year rolled by while I was gone,
+Our letters daily flew,
+And hours were helped by hearing many
+Lines so sweet from you.
+
+Our wedding day in May was set
+At apple blossom time
+In Arkadelphia's Baptist church;
+I hardly had a dime.
+
+I'd begged us wait, you blocked such fate,
+Your faith was like sweet nectar.
+You must have known the funds would come
+From a Revival, held at Rector.
+
+You glided down the lovely aisle
+More lovely than all heaven;
+We said &quot;I do&quot;, and started then
+A brood that's led to seven.
+I do love you!
+                    J. L. Hall
+
+(Put to music by Norm Wakefield.)</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MOTHER LEFT US LONELY</h2>
+          <div class="poem-year">1965</div>
+        </header>
+        <div class="poem-content">Mother's work on earth has ended,
+All her trials on earth are o'er,
+She has gone to join her loved ones
+On that bright and happy shore.
+
+Now her troubles all are over
+She will suffer no more pain,
+She has left us, oh, so lonely,
+Yet our loss is Heaven's gain.
+
+Oh, we loved her, yes, we loved her,
+Yet our Jesus loved her more:
+Therefore he has sweetly called her
+On to yonder shining shore.
+
+What is home without a mother?
+Many things this world may send...
+To sadly lose our darling mother,
+We have lost our dearest friend!
+
+Jas. Holton: Bolivar
+adapted by J. L. H.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">KEEP ON LIVIN'</h2>
+          <div class="poem-year">1967</div>
+        </header>
+        <div class="poem-content">Through the lonely night I lie
+Upon my bed, sometimes I sigh
+Or think about the day just closed.
+My thoughts were sharp before I dozed.
+
+Yet in the night between the winks
+Or in between, as conscious sinks.
+I know that life moves on in stride.
+Reality is hard to hide.
+
+Another day is mine, in hope.
+With God I need not grope or cope.
+Each day is that which He has made.
+I will rejoice, though memory fade.
+
+The morning comes, ah all is new
+Another day, with sparkled dew.
+I'll tackle all the fearful host...
+And stand up tall, with whispered boast.
+
+With Him, I cannot be out-done.
+On time, He joins me in the run.
+I bravely face the day with Him.
+To Him be praise! We conquer sin!
+
+J. L. Hall    '67</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">FIFTH ANNIVERSARY SUNDAY FBC</h2>
+          <div class="poem-year">1967</div>
+        </header>
+        <div class="poem-content">The years we have served you are five.
+We're glad we're all still alive.
+As we start year number six.
+Maid much politics
+We'll contrive and revive and survive!</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">ON BEING LOST</h2>
+          <div class="poem-year">1970</div>
+        </header>
+        <div class="poem-content">(Awareness)
+
+The silence of God roars in my soul.
+Anxious and desperate, I would be whole:
+I look for new hope, peace and delight.
+Help me to safety, pity my plight.
+
+(Conviction)
+
+Will the night pass, must I grope on.
+Is there sure victory in God's Son?
+I'm a culprit, victim of sin.
+Helpless, distorted, broken within.
+
+(Repentance)
+
+Deal with my soul, plead with my spirit.
+Eternal life I never can merit:
+Save me dear Christ, I offer my life.
+Forgive my sins and long wicked strife.
+
+(Release)
+
+Thanks be to God who hears even me.
+Victory is mine! Now I can see!
+Fun from today, Jesus is mine.
+I, like the stars, forever will shine.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MY VALENTINE</h2>
+          <div class="poem-year">1971</div>
+        </header>
+        <div class="poem-content">As time moves on, each passing year
+Gives chance to say &quot;I love you dear&quot;.
+And so I say it loud and clear,
+And hope to prove it far and near.
+
+Love's a funny little dart,
+It's sorta like a lizard.
+It twines itself around my heart
+And nibbles at my gizzard.
+
+And love is more than that, they say,
+It's friendship, joy throughout the day;
+It makes two pals and in this way,
+Companions true, from May to May.
+
+Love's best defined in themes on giving,
+It's bundled up in sharing,
+It's mostly seen in Godly living
+And truly, truly caring.
+
+So, whether mine for you is emotion,
+Or friendlike fun, like a festive potion,
+Or deepest daring downright devotion...  
+It's living, and dynamic motion.
+
+Of all the poems writ by men,
+Sure, dominates the theme of Love!
+I say, repeat, again...again,
+I love you Bet, my queen from above.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WITH CHRIST!</h2>
+          <div class="poem-year">1972</div>
+        </header>
+        <div class="poem-content">With Christ the way is joyous
+Satisfactory indeed.
+Though a life of toil, it gratifies
+To help a world in need.
+
+Without Him, life is fruitless,
+It seems a drag all told;
+Blunders and burdens destructive
+For followers less than bold.
+
+With Christ one has top billing,
+Alone, we know our lack;
+Victory comes in the struggle
+As we walk the heavenly track.
+
+With Christ I'll e'er be busy.
+I'm adrift if cut from the vine.
+I can do all things by his power
+His Presence makes everything fine.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THE SEARCHING MIND</h2>
+          <div class="poem-year">1973</div>
+        </header>
+        <div class="poem-content">Another year, and we're still here,
+But where we are seems a blot;
+We think! We are in a hemisphere.
+Yet who we are, we know not.
+
+To know is to be, this truth we can see,
+But where we are is not certain:
+To be, is to live, and to live is a joy,
+Yet someday, there comes down the curtain.
+
+Be joyful and wait, this fact we will state
+If still we know not our being,
+Try serving another, the unfortunate brother,
+This lifts us from darkness, to seeing.
+
+So on we go, how far who can know,
+It seems each day is a second,
+We're not satisfied, hardly fit to be tied,
+This may be worth something, we reckon.
+
+E're night comes on with its dreary tone
+There's lots to seek out and endeavor,
+There's Heaven to find, and sweet peace sublime,
+But never because we are clever.
+
+The world awaits its Champion great
+And is passing on from its loss;
+Each man must choose the way he turns,
+And inwardly, surely he knows.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">TRANSITION</h2>
+          <div class="poem-year">1973</div>
+        </header>
+        <div class="poem-content">The days move on
+And I go too.
+But the pair of us
+Must divide into two.
+
+The days pierce time,
+Yet I abide;
+But it's most difficult
+To take in stride.
+
+Upsetting and weird
+This mixed-up life.
+Tasty as honey,
+Sharp as a knife.
+
+I'm glad Time's only
+A part of me;
+I've yet much hope
+Throughout Eternity.
+
+All stakes driven down
+Have vanished away.
+But investments in Christ
+Will forever stay.
+
+Forward's the watchword,
+Never look back;
+It's what's up ahead
+That can never be slack.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">IT'S GREAT, INDEED!</h2>
+          <div class="poem-year">1976</div>
+        </header>
+        <div class="poem-content">When in the course of a busy day
+As I am walking along my way
+I stop and to myself I say,
+&quot;It's great to be alive!&quot;
+
+The sun is shining strong and bright
+And beams steal through in radiant light
+Till say it just because it's right,
+&quot;It's great to live in hope!&quot;
+
+I may be in my room alone
+Or talking by long-distance phone
+&quot;It matters not...to stay or roam,
+&quot;It's great to trust in God.&quot;
+
+So come what may or come what will
+I'll go on laughing, singing still
+And when they say he's &quot;over the hill&quot;
+&quot;It's great to have had these years&quot;
+
+If someone chance to remember me
+They'll remember a life so full and free
+And hopefully one of integrity
+&quot;It's great to have walked along&quot;.
+
+And down the years in another day
+As I think again along that way
+I'll stop and tomyself I'll say,
+
+&quot;It's great, just to have lived!&quot;</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">TEEN TEASERS</h2>
+          <div class="poem-year">1980</div>
+        </header>
+        <div class="poem-content">The priceless ingredient
+(Not being expedient)
+Of life and the search for real meaning.
+
+Is love without measure.
+A true lasting pleasure
+That makes all about us seem greening.
+
+But I can't disallow this.
+The affectionately warm kiss
+Can grace the word &quot;love&quot; to an apex!
+
+And all surely know it.
+'Tis simple to show this
+Without all the pages of index.
+
+Ah, heed hidden dangers
+Or loose-riding strangers.
+They boss, then they run for the bushes.
+
+No marvelous conclusion.
+Their act's all illusion....
+They leave you with nothing but &quot;wooshes&quot;.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WHEN THE KIDS CAME HOME</h2>
+          <div class="poem-year">1982</div>
+        </header>
+        <div class="poem-content">Fantastic day it was to be
+When to our house there came so free
+Our family tree.
+
+All plump and healthy, eyes so bright
+Arrival came by day and night.
+It was just right.
+
+Our children brought their own along
+And came on wings of mirth and song
+And what a throng--
+
+Bright Amy cozied up to talk
+To Grandma 'bout her recent walk
+And that's not all.
+
+For Abby with Alyssa came
+Recalling each their cousin's name.
+T'was not a shame.
+
+While Leigh Ann called to Jonathan
+Who had his trimly holstered gun.
+Intent on fun.
+
+Young Micah wouldn't take back seat,
+Hugs, kisses he would ask, repeat,
+And think it neat.
+
+Next, David big and strong and tall
+With Adam came and said to all,
+&quot;He sure plays ball&quot;.
+
+Then Angela with eyes so blue
+Was looking 'round for someone new
+And met a few.
+
+Amanda-Wes made quite a pair,
+They liked to mess up Matthew's hair.
+He's one quite rare.</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WHERE ARE THEY?</h2>
+          <div class="poem-year">1982</div>
+        </header>
+        <div class="poem-content">Where have all the children gone
+Long time ago?
+They have now all grown way up,
+And that I know.
+
+When will all the children come
+And visit me?
+They will come, but bigger be
+We'll surely see.
+
+What do all the children do
+And find the time?
+They can do so many things
+As, make lines rhyme.
+
+What are all the children so
+Involved in doing?
+Are they happy in their work
+And tasks pursuing?
+
+Who are with the children now
+That we are aging?
+They have friends and one another
+Plus battles waging.
+
+To whom will all the children pledge
+Their best and being?
+To Him whose trust and love abides!...
+'Mongst selves, agreeing.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WEEK AT LAKE VALE</h2>
+          <div class="poem-year">1984</div>
+        </header>
+        <div class="poem-content">(To Bette)
+
+I see new sparkle in your personality,
+It isn't passing shadow but reality,
+I like the prospects and eventuality
+Of deeper love, not based on triviality.
+
+These days have brought us happy inspiration;
+The hours have passed with utter facination;
+I think we now have surer inclination
+To find a better planned-for realization.
+
+So let us hold these moments very dear,
+and press on, without doubts or hurtful fear,
+Then we shall always be so warmly near
+Embracing precious memories year by year.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">KID'S PICTURES</h2>
+          <div class="poem-year">1985</div>
+        </header>
+        <div class="poem-content">Their pictures hang upon our wall,
+And bring back joys we both recall;
+Memories sweet and tranquil, too...
+Aye, all those days seemed, Oh, so few.
+
+Time-distance took them far away
+From us, to strange and mystic fray;
+Clear-cut were moments long ago,
+But fuzzy thoughts now plague us so.
+
+When through our door comes once again
+In flesh and blood, grown boys, now men...
+And ladies fair, so nobly poised;
+No longer children---girls and boys...
+But grown ups, just where we once were;
+I glanced at him...then also...her,
+And saw in them my life unfold;
+And mother stood there to behold.
+
+These are our children, lives unwasted,
+They'll live their days with nought untasted
+Of happiness and fulfillment:
+We paused..learned much...in that moment.</div>
+        <footer class="poem-footer">
+          <a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">REUNION, 1985</h2>
+          <div class="poem-year">1985</div>
+        </header>
+        <div class="poem-content">Family times are happy times,
+The clan comes o'er the miles,
+We like the hours of fellowship
+And play our games with smiles.
+
+From Titusville there came the Goodes,
+The Wakefields from the Valley,
+From Iowa, the Moeller gang:
+Our purpose--is for rally!
+
+We met this time at Bolivar
+With Jim and Dawn and theirs,
+Some flew, some drove for many hours,
+We mostly came in pairs.
+
+We thought of Hal who couldn't come,
+His work was scheduled rightly,
+But others came to fill the void
+And fun was with us nightly.
+
+We ate, and played, and shopped and slept,
+And fished and sang and talked;
+The days went by at ghastly speed,
+While kids swam--others walked.
+
+We went to church on Sunday, too,
+And saw a host of friends;
+The City seemed as times gone by
+And nought, were new type trends.
+
+The time soon came to say Goodbye,
+We packed, it broke our heart,
+We ponder how we'll miss them so,
+As one by one we part.
+
+Next year will be another time
+To try to get together,
+We'll plan each one, to make the time
+Come fair or stormy weather.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WOODING</h2>
+          <div class="poem-year">1985</div>
+        </header>
+        <div class="poem-content">Old Age puts one in reverie,
+It pricks the habits of memory
+And tugs on strings of other days
+Like past good times, picnics and plays.
+
+Old age is like a dozing dog,
+Who snips at flies, his mind in fog;
+He hardly knows a person's near,
+Strange sounds can raise both ears and fear.
+
+Old age will sneak and creep on one,
+Can take the joys that's found in fun,
+But there are complimentary gifts...
+One's hardly aware of tifts and rifts.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">COMMUNION</h2>
+          <div class="poem-year">1985</div>
+        </header>
+        <div class="poem-content">Lord, thank you for the way
+You've brought us to this day:
+Never been a promise broken
+In all you've ever spoken.
+
+Help us on from this place.
+May we trust your daily grace:
+Keep us ever in your will
+While we rejoice in all the thrill!
+
+Now, it's time to take the plow.
+I must rise and do it now.
+Won't be easy this I know.
+I shall sink as on I go.
+
+Victory is ours, in sight:
+Faith foretells our winning right!
+God is good as He declares--
+He can break and He repairs.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MEMORIAL DAY</h2>
+          <div class="poem-year">1985</div>
+        </header>
+        <div class="poem-content">There are some people who are living so fast
+They just will not pause to consider the past.
+It seems all history to them is a bore.
+But sad their lives, if the past is ignored.
+
+Memorial Day is a good time to pause
+And make it a season to consider a cause
+That should speak of heritage, and those who fought,
+Preserving our Freedoms, such sacrifice was wrought.
+
+Too, there are those who labored and built
+Up our land with learning and gave to the hilt
+Of themselves and their skills so favorably deployed
+With the blessings of country and home so enjoyed.
+
+Finally, our gratitude could not be complete
+Without all those truths, we today must repeat
+Concerning the help our forebears have given
+To help us have meaning in this age so driven.
+
+You see, when we celebrate our golden inheritance,
+We cannot but thank Him who grants us a stance
+Of victory and blessings, and very much more
+That humbles us, making us stand in the fore.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MEMORIES</h2>
+          <div class="poem-year">1986</div>
+        </header>
+        <div class="poem-content">What do you do when you're 60 and retired?
+I really don't know, since I'm 35 and hired;
+But I'm willing to guess, since I know my folks well.
+There's time to look back, and enjoy memories spell.
+
+So, since it's Christmas, and I do want to give
+But as you know, Seminary's &quot;where we live&quot;.
+What shall I give to my folks I love so?
+What about 35 years of memories, my gift to bestow.
+
+Select a memory each day, for a month makes it longer
+My guess, Mother won't wait, her will is not stronger.
+Maybe you'll read them all at once, that's just fine.
+Please know, that for me, they're worth more than
+                                                                        dime.
+
+Quite frankly, I'm very, very pleased to report
+I only &quot;boo-hooed&quot; and bawled very short;
+I spent more time praising the ONE
+Who chose me to come and live with you for fun.
+And for discipline, correction, acceptance, and Love.
+So when I'm over 60, I'll ever thank Him, up above!
+                                                                        Alma Wakefield
+                                                                        (Adapted by JLH)</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">LOOK UP, FRIEND!</h2>
+          <div class="poem-year">1987</div>
+        </header>
+        <div class="poem-content">When the &quot;I don't knows&quot; get to me,
+I have to kneel down to pray,
+Then the &quot;I know betters&quot; are given me,
+It's Love that shows me the way.
+
+Sometimes the way grows dreary,
+And I need a lot of help
+It's then that I cease to be weary,
+I must not gripe and yelp.
+
+So I let the &quot;don't knows&quot; become arrows,
+And the &quot;know betters&quot; lift me up high,
+Then I am in harness for Someone,
+Who points me to goals in the sky.
+
+Come, let your failures be lifted,
+And your doubts be all washed away,
+In gladness your hopes will be mended,
+You'll walk in a new living way!</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">SEASON BLUES</h2>
+          <div class="poem-year">1987</div>
+        </header>
+        <div class="poem-content">With my wife gone, the house is quiet.
+I have to shop, (but of't won't buy it).
+My appetite is not so good--
+My interest wanes on frozen food!
+
+The days go slowly, like the crowd
+In traffic jams, (horns blowing loud);
+I catch a nap mid-afternoon
+As night comes on, and then the moon.
+
+Come meetings set for my attention,
+Men gather-talk, as at Convention.
+We fellowship around the table,
+And check to see if all is stable.
+
+Then back to my quiet domicile
+Where is no sound of pet nor child;
+Just programs offered on TV,
+Or books to read--these capture me!
+
+I do have matters I must rate,
+Yet, nothing pressing, things can wait--
+In solitude I muse and roam
+Around my silent peaceful home.
+
+But mostly, days are lonely things,
+The postman comes, a letter brings.
+Or yet, again, I hear the phone,
+Good tidings bring, I no more moan.
+
+She's there to say, &quot;Hello, my Love&quot;;
+It's like a voice from up above;
+We chat a bit and share the news;
+I'm glad she called to chase the blues!
+
+J. Leland Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">A BIRTHDAY THOUGHT</h2>
+          <div class="poem-year">1987</div>
+        </header>
+        <div class="poem-content">Birthdays come and go my dear,
+And now we celebrate this year
+As time keeps passing on its way...
+I'd like to write a poem of YOUR Birthday!
+
+God must have had a special plan
+When with His Everlasting span
+He brought together precious things
+To make your Voice that sweetly sings.
+Then with His gentle touch He formed
+Your spirit bright, then, He adorned
+Your hair so fair and downy soft,
+Somehow He lifted you aloft!
+
+Next, a twinkle from the Skies
+He placed right in your laughing eyes;
+And lips so sweet, He formed your smile...
+Your friends to gladden, all the while.
+
+He surely must have known your heart
+That would become like His, of sort,
+And then, He made you mine, indeed,
+For He well knew my deepest need.
+
+Now, I'm so glad that I can say
+On this, your latest grand Birthday
+That God's great Love, so pure and sweet
+Had caused our souls one day, to meet.
+
+So, Happy Birthday, Love of mine,
+Let's go aside and talk and dine,
+Then when we've settled down at night,
+I'll snuggle up and kiss you right!
+
+A kiss for every year we've known
+To thank you for the love you've shown
+And, just because you're YOU, I'll try
+Always to thank our Lord on high.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WE CRIED A BIT</h2>
+          <div class="poem-year">1987</div>
+        </header>
+        <div class="poem-content">Memory's gates were opened wide
+And there we sat, side by side,
+Holding back a tear or two
+Reading lines that will abide.
+
+Overhead a wild bird sings,
+We had heard from Denham Springs,
+Letters come, but Oh, so few,
+Messages too, when phone oft rings.
+
+Here had come a book of notes,
+Melodic thoughts and several quotes,
+Halfway through we knew just who
+Had given this gift without our votes.
+
+Enthralled were we as pages passed,
+With every thought, some memory cast,
+Nostalgia with our journey flew,
+So much of joy we know will last.
+
+So thank you for your knowing care,
+We'll often turn and linger where
+You made us sad and happy too
+With memories bright you let us share.
+
+(Written after a sweet letter from daughter)
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">SCATTERING</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">As a poet, with seeds I will sow it,
+And many surely shall know it;
+This story of LIFE!
+
+As a garden, the bards and the warden
+Vive generously and with sure ardour
+Incredulous freedom so rife!
+
+For service, in which is no malice,
+We joyously lift up a chalice
+Of merciful blessings so nice!
+
+In the Book, which shouts from its nook,
+His own, He never forsook,
+How gently, to their delight!
+
+So heed it, you always will need it,
+To you He surely will deed it,
+The Church.; Christ's bride and wife!
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">A POEM EACH DAY</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Just a poem a day
+In a different sort of way,
+Keeps the blues away,
+And I enjoy it.
+
+Thoughts are like money,
+And taste like sweet honey,
+Even sometimes are funny
+And I think them.
+
+Looking inward to gander
+As the brain will meander,
+Thinking things here and yonder,
+Can I trap them?
+
+As a would-be-like poet,
+(Few will ever really know it)
+Yet I just have to show it,
+So I ponder...
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">LAKE YALE MEMORIES</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Lake Yale is such a lovely place,
+Where one can always find grand space
+And time to rest and meditate,
+If seeking destiny or fate.
+
+We love Lake Yale, a place to go
+And quieten down a bit, and slow
+The pounding of one's heart...
+Can be the place of brand-new start.
+
+The friends, the folk of common thought
+Enclave to listen and be taught
+Of matters high and noble need.
+'Tis there we find JGod's planted seed.
+
+No need to travel far afield
+Discov'ring blessings those may yield,
+When right close by, ah rare sublime
+Inspiring sessions fill one's time.
+
+Lake Yale will always mean to me
+A place, a time to share and see;
+All wonderful delightful stay,
+A rendezvous along God's way.
+
+We came, we met, we sang and prayed,
+We heard the voices speak, and made
+Our friendships strong with travelers there,
+And shared with them God's message fair.
+
+J. L. Hall 1988</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">YOUR SPECIAL DAY</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">It's birthday time again my dear.
+There passes by another year.
+Many we've known as you can see
+We've enjoyed them all, just you and me.
+
+This year was fine and full of glow.
+We watched the seasons come and go.
+As with the others through the years,
+And like the others, mixed with fears.
+We had full joy,
+
+But for the most part ours has been
+Days of pleasure, bound to win.
+And times of useful service bright
+That brought fulfilling cheer to light.
+
+Your day of birth suggests to me
+Our Father destined you to be
+A blessing to the world about.
+This stirs my heart to happy shout!</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">GRANDCHILD</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">This one seems ever so tiny,
+Including its little &quot;be-hiney&quot;.
+So innocent and so charming,
+We couldn't do anything harming.
+
+The days were both rash and delightful,
+At times a little bit frightful,
+But happy and entertaining,
+We've only an hour remaining.
+
+Each child has its own disposition,
+They seldom go into remission,
+We see that they are most precocious,
+As SUPERPRAGELLISTIC_EXPEALLIDOCIOUS!
+
+But times show their other sideling
+Which I'd rather forget, or be hideling,
+When that lower lip is poked-out at me,
+I could pull my hair with a shout-a-lee!
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">RETIREMENT</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">The days all run together.
+We talk about the weather.
+We sally on...
+
+Our friends become remote.
+Our chores are done by rote.
+Sometimes by phone...
+
+We try to think and plan.
+Things tried, are oft &quot;off-hand&quot;.
+Then day is done....
+
+These days are sometimes pleasant.
+(We can't afford a Pheasant),
+Nor hear some tones....
+
+Still, we're a happy two-some.
+Even find some time for &quot;woo-some&quot;
+E're week in gone....
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">OUR FRIENDS BY THE SEA</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Thank you, Olive and Henry
+For surprise birthday gift,
+And your thoughtful nice words,
+This gave us a lift.
+
+We had come to your home
+To pay honor so true,
+With the many who showed
+Their deep love for you two.
+
+We're glad things went well
+And the time, a delight,
+And will always remember
+Your gift, tasty sight!</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">ON BEHALF OF PARENTS</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Two days combine as &quot;Parent's Day&quot;
+(This does not need good reason).
+They come in May and early June.
+Let's celebrate the Season!
+
+Of fathers and of mothers dear,
+So faithful did they give,
+Love to mine tremendously,
+They gave that I might live.
+
+On Mother's day, I homage pay
+And reminisce awhile.
+Her lovely life still benefits
+As did her timeless smile.
+
+She still lives on in memory
+And always will, I guess;
+Her influence is as sweet perfume.
+To this I must confess.
+
+And Dad was one who never failed!
+To be on hand when needed:
+It took a while to know his care
+Which now I have conceded.
+
+He never raised his voice to me
+Unless I strayed afar;
+As child, I knew his helping hand,
+He shines like yonder star.
+
+So, Seasons come and go each year.
+'Tis now I look to parent
+Whose lives are more than memory:
+Great blessings I inherit.
+
+Mother's Day with Father's Day
+Are good---I pause to treat
+My precious Ones who did so much
+To make my life complete.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">NEW BABY</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">I never had any training.
+I never got a degree.
+One day they came and related
+&quot;A Mother you're going to be.&quot;
+
+So, where should I get started?
+Really, this is just not my taste.
+Til now, babies just seemed a bother.
+But another? My time I can't waste.
+
+Then, as my body grew bigger,
+And life inside was to bloom.
+I somehow came to conclude,
+That this wasn't all doom or gloom.
+
+So my heart begin to cherish
+Each tiny kick I would feel.
+'Twas then I began to realize
+This one in me was quite real.
+
+I wondered and pondered each day
+And into the weeks that did come
+What this little life would look like.
+Would it be a daughter or son?
+
+At last the big day arrived.
+All the pain was certainly there.
+But I knew I'd be a Mother.
+God gave me the power to bear.
+
+Before the good day was over,
+Our hearts would all leap with joy:
+For we learned the one we awaited
+Was a precious small girl, not a boy!
+
+And so, with my labor now over,
+I thought the hard part was now done.
+How little I knew what was coming.
+Life-long mothering had only begun
+                                                                        Lydia Goode 12/88</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WEDDING ANNIVERSARY (42nd)</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">We have walked many miles
+And we've had many smiles,
+Although through the years
+There have been fears and tears;
+But you gave me much courage
+For each and every 'worriage.'
+You are my best friend, my advisor, my
+My pastor, my helper, and joy of our house
+I love you, Bet.
+5/88</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">ETERNAL DAY</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">In God's Eternal Day, there is no sorrow,
+In God's Eternal Day, there are no tears;
+In God's Eternal Day, a bright tomorrow--
+This is our hope throughout these weary years.
+
+In God's Eternal Peace, a glad reunion,
+In God's Eternal Peace, we'll see and know,
+In God's Eternal Peace, all heart-aches over,
+This is our hop-e each day as on we go!
+
+In God's Eternal Light, there is no darkness,
+In God's Eternal Light, we'll die no more,
+In God's Eternal Light, there is no sadness,
+O glorious day of Joy on that fair shore!
+
+In God's Eternal Rest, there is no sickness,
+In God's Eternal Rest, there is no pain;
+In God's Eternal Rest, we'll be like Jesus,
+O blessed hope that we'll forever reign!
+
+In God's Eternal Joy, we'll praise our Savior,
+In God's Eternal Joy, we'll shout and sing;
+In God's Eternal Joy the Angels join us,
+To lift up Christ, and to Him homage bring.
+
+In God's Eternal Glory, shout &quot;Hosannah&quot;!
+In God's Eternal Glory Christians win!
+In God's Eternal Glory join the chorus,
+And all God's Children gladly say, &quot;AMEN&quot;!
+
+Bob Randall &amp; J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">COOL SPELL IN Florida 1988</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Cold has come to our place.
+I really can't enjoy it;
+It seems to make its own case,
+And who would dare despoil it?
+
+The windows close in tightness
+Against the bitter wind;
+The trees respond with fright-ness.
+They won't give up or bend.
+
+I find my joy in reading.
+The heat is soft and warm;
+The hours pass til feeding,
+The change will do no harm.
+
+And so in life we wander
+And so in leisure pause;
+My mind can only ponder
+What next shall be my cause.
+                    J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">EVENTIDE AT CHURCH</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">The people gather slowly.
+The organ starts its peale
+While voices twitter softly.
+One cannot help but feel
+Contentment and refreshing
+Within the Soul, a blessing.
+
+Then next, the songs are lifted.
+The crowd now entered in.
+The Preacher sits in silence
+As Love and Spirit blend
+Into a sweet communion
+Of joyful Peace and Union.
+
+(Harbor City Revival) J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">CHRISTIAN RADIO</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Through the air the message flies
+With thoughts of the Kingdom of God,
+No boundary stops the needed news
+From Baha to Cape Cod.
+
+The speaker shares good-news aloft
+By way of the ether waves;
+The hearer can ask with hungry heart
+Learn how the Seeker behaves.
+
+God is intent on telling all
+The love He has for sinners.
+The airwaves give encouragement,
+Also, to Christian winners.
+
+&quot;Go tell&quot; was Jesus' last command,
+And many ways we do it:
+Broadcasting fingers reach afar
+To pierce Hell's gate, and through it.
+
+I'm glad that there are those who give
+To help keep truth a'flying.
+The uttermost who need to hear
+Might heed, and escape dying.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MY INTERIM PASTORATE</h2>
+          <div class="poem-year">1988</div>
+        </header>
+        <div class="poem-content">Just a view from the Harbor
+Shows a sight of pure delight:
+Christians gather in good spirit
+Both at morning and at night.
+
+This church is like a Lighthouse
+Giving light throughout the night
+For the weary woeful travelers
+Who are searching for the right.
+
+We now join in joyful worship.
+We would fight with Sacred might
+In the battle for great truth...
+Lifting Christ to greater height!
+
+With the Lord's Day finally over
+Gone is fright, when comes twilight.
+So we all can amble homeward,
+Spirits touched with new insight.
+
+Thus the church will stand forever!
+Fades old rite, in doceful plight.
+Now God's people will look upward
+Toward the clouds so downy white.
+
+I'm so glad that I am able
+As God's Knight, to sit and write
+Of a people once disparing...
+Now in joy their souls unite.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">DON'T READ THIS ONE</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">You were warned to turn aside,
+This is just a waste of time
+To read words sounding pointless
+Just no more than making rhyme...
+
+Reading poems should be healthy
+Feeding brain or bringing smile,
+But to simply read a couplet
+May be futile all the while.
+
+Words together dance and tumble
+From the pens of slap and bard,
+They may be a messy jumble
+To be skimmed, and not too hard.
+
+From the mind of sleepy writer
+Races on the lines so &quot;smart&quot;.
+Senseless, crazy, without meaning,
+While all syntax falls apart.
+
+Never mind your concentration,
+'Twas not meant to make good sense:
+Just some time to waste and scribble
+Verbs won't even fit their tense.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">TIRED EVENING THOUGHTS</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">What do you say, let's call it a day,
+We've come a long way, it's now time to stay.
+
+At this point in time, (more important than rhyme)
+Spending more than a dime is a must, if we shine.
+
+On this planet a-spinning, where folks go
+sinning
+And I keep on a-penning in attempts toward winning
+
+A victory of sorts, that blesses all hearts,
+Like hard striking darts, and dismantling of carts,
+
+Carrying loads in their season, to a destiny of reason
+For Saints, not the heathen, nor troops who do
+treason.
+
+So, let's let it all go like boats straining in tow,
+Or, like grains row on row in fields where men sow.
+
+It's time to hang up, I'll give no one &quot;Grupp&quot;
+And my brain interrupt like a friendly young pup.
+
+Goodnight to all readers, you MUST be good deaders
+And joyful young heeders who've read this heart
+bleeders.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">OUR ANNIVERSARY</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">This anniversary will surely hold no sorrow,
+It tells us how our days become tomorrow.
+We have so much to bring unto today
+That shows us God has walked along our way.
+
+The years move on into the future bright,
+And ours has been a highway, full and right
+As on we journeyed to our distant goal
+And found sweet treasures precious, yet untold.
+
+Remember how each step, so gently laid
+Brought us together, never dull or staid.
+And we with happiness trudged forward still
+Undaunted by hot valleys and long hill.
+
+We learned that joy is in the daily hope
+Within our hearts, not floundering to grope
+Meaninglessly against harsh passing blinds
+As one who fails, and never wins, or finds.
+
+Now let us plan and pray that on ahead
+We'll never let our dream vanish as dead;
+We've had so much of beauty, life, and heaven,
+It seems we've had a bright preview of heaven.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">GRANDDAUGHTER'S PICTURE</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">There she is, observing me,
+Her big eyes all intent.
+They follow me around my room:
+This pose, was not so meant.
+
+The wide brimmed hat, a perfect frame
+On which to rest her curl
+As ringlets fall on shoulders of
+This charming little girl.
+
+So life-like, yet so innocent,
+Her gaze is brightly gleaming.
+The tender thoughts of childhood days
+Expressed in blissful dreaming.
+
+She watches o'er my study chair
+As silently as night.
+Her lively features, frozen there--
+A statuary sight!
+
+An inspiration for old minds
+And hope for all tomorrows:
+I pray her life will happy be
+By-passing griefs and sorrows.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Garage Sales</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">Ever go to make a garage sale?
+Ever look for bargains there?
+You will find both male and female,
+It can be joy if you dare.
+
+Always go with pocket money,
+Try to beat the early bird,
+It will seem to you quite funny
+What is &quot;seen and what is heard&quot;.
+
+Over in the corner hidden,
+May be treasures long forgot,
+If you snoop around unbidden
+Finding values, or &quot;what not&quot;.
+
+Once upon a trek so casual
+In the boondocks of our town
+Was uncovered most unusual
+Just the thing one wouldn't turn down.
+
+It's the trash to treasure story
+Just an old and dusty thing
+But beneath all crusty gory
+Was this item gold would bring.
+
+Cast off camera, rusty rig,
+Bought for just a paltry pence;
+These when sold brought prices big,
+Go thou likewise, hasten thence!
+
+Time and patience, knowledge, too
+Makes for fun and riches over;
+Garage sales should not make you blue,
+One might finish, high in clover.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">SO GO SOME DAYS...</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">This has been a day of sorts
+That's brought to light most all my &quot;warts&quot;,
+And woes that do beset me so,
+I'll be so glad to see it go...
+
+It started with a cloudy sky
+That robbed my spunk, I can't say why.
+Then through the day came troubles more,
+They left me bruised and very sore.
+
+By noon I'd wished for better times
+And sat to write some poems and rhymes,
+The best that I could come upon
+Was verse like this, (T'were better gone!)
+
+Yet on this weary woeful day
+At least I've chanced to have my say,
+And lingering still, far down the line
+Will be thoughts spoken, that were mine!
+
+For good or ill, this short repast
+Providentially will last and last,
+Til someone in a distant day
+Will read and say, &quot;I'd rather play&quot;.
+
+Just go ahead, if you're so led,
+At least by poem, you've been fed,
+And I have had my sweet revenge
+By leading you on &quot;Poetic Binge&quot;! Ha!
+
+Wait---You weren't cause for troubled day,
+Yet you have said, &quot;You'd rather play&quot;,
+So my revenge's against myself---
+My poems will end up on your shelf!
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">RELIEF</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">There is a time midst the flying years
+That bring us down to flowing tears;
+A time to grieve o'er fears so real
+And also to cry with plaintive appeal.
+
+But there is a time to weep for joy
+When news comes of no weakening alloy
+That what was frightening, has now no fears.
+The relief brings a rush of gladdening tears.
+
+How good to feel at the close of day
+That Someone else walked along your way
+To brighten up all those cloudy skies
+And put you on &quot;go&quot; for the upward rise.
+
+God's given glory for every delight.
+We praise Him for making day from the night:
+He lifts us up from all dark dispair,
+And gives us new songs that float on the air.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">DAYS AT KING STREET</h2>
+          <div class="poem-year">1989</div>
+        </header>
+        <div class="poem-content">The King Street saints are gentle souls,
+They care for one another,
+It's been a joy to work with them
+Like Sister and like Brother.
+
+We traveled many miles to serve,
+And found them always ready
+For five and thirty years, involved
+In Kingdom work so steady.
+
+The services were cheerful, bright,
+And praise was offered freely
+To God, whose Son was lifted up--
+Exalted--Worshipped, really!
+
+No problems crossed our way, to mar
+The fellowship and reverence
+Among the folks at King Street church;
+We surely dreaded severence.
+
+But we were only &quot;filling in&quot;
+To help, and to encourage;
+Those days were full of happiness,
+They certainly &quot;were no Dirge&quot;.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Favorite Fruit</h2>
+          <div class="poem-year">1990</div>
+        </header>
+        <div class="poem-content">I think that I have never seen
+A fruit so fine as a tangerine.
+It's tasty, delightful, and easy to eat,
+It peels so nice, and tastes so sweet.
+
+Days when I'm in need of a treat,
+I peel me a bite, it's clean and neat.
+A fruit that's truly fit for a Queen,
+This delicious morsel, the Tangerine.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MY QUIET SPOT</h2>
+          <div class="poem-year">1990</div>
+        </header>
+        <div class="poem-content">Down to the stream, on my &quot;fantasy beam&quot;
+For an afternoon spent with some fishin',
+I'll spit on my bait and drop it below
+In the water, and I'll dream, with my wishin'.
+
+I really don't care if the frisky things bite
+'Cause I'm really there just for the musin'
+I need such a time to catch up with myself,
+Life sometimes can be so confusin'
+
+A day's not a waste when I get all aside
+To capture my thoughts and my sensin'
+I'm glad to go fish, or do anything quiet;
+I can tie up loose ends, start commencin'
+
+Don't pity the one who enjoys a stroll
+As he wanders or sits for his whittlin'
+The greatest ideas for all human kind
+From solitude comes, it's like riddlin'.</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THOUGHTS ON MICCO</h2>
+          <div class="poem-year">1991</div>
+        </header>
+        <div class="poem-content">The Micco Saints received us warmly
+Thirsting for a Word of Light,
+Gladly came we to their family
+Praying for a new day bright.
+
+The church was ready for the Gospel,
+And to lift their eyes with hope,
+Joyfully we spread the table
+Casting forth the &quot;helping rope&quot;.
+
+The days moved on into the seasons
+Bringing scenes of pointed need,
+Patiently we tried to serve them
+Giving aid and sowing seed.
+
+The services were all delightful,
+Worshipping and singing all,
+Eventually, we sensed a calmness,
+Healing bliss; souls stood up tall.
+
+The present brings a satisfaction,
+Knowing God has been so good,
+Wonderfully He answered prayers
+Exactly as He said He would.
+
+The future seems a brighter pathway
+Filling souls with peace sublime;
+May our friends at Micco prosper,
+Knowing God redeems the time.
+
+The clock moves on as Spirit prompts us,
+Calling churches to His love,
+Eventually we'll hear His voice
+Calling us to Heaven above.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">1992 Churches</h2>
+          <div class="poem-year">1992</div>
+        </header>
+        <div class="poem-content">Not many poems in ninety-two,
+Just couldn't see my journey through,
+Time was precious, fast it flew
+It seemed I had so much to do.
+
+Busy is the Interim's task,
+What he does you needn't ask;
+Three fine churches called on me...
+Micco, Satellite, and Eau Gallie.
+
+We travelled every day to serve
+The people, and they had the nerve
+To ask us come, and help and preach,
+We liked that challenge: lead and teach.
+
+The months rolled by, where did they go?
+We made new friends, we loved them so,
+We saw their joys and shared their pain;
+The passing scenes---not seen again.
+
+Some friends stand out--not e'er forgot,
+We shared when summer days were hot;
+Lives intertwined, then folks depart
+To go their ways, it breaks one's heart.
+
+But memory stays to bring friends back,
+Much happiness there for us...no lack,
+I'll reminence, and think of them,
+So close to us were they, like kin.
+
+Good friends will share our lives again
+In sunshine days ahead, or rain,
+The lasting part of life exists
+In meeting new and old like this...
+
+Somewhere down the length of time,
+The bright spots cancell out the grime,
+And people touching others, bloom
+In golden thoughts...forbidding gloom.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Twenty-Third Psalm for COM</h2>
+          <div class="poem-year">1992</div>
+        </header>
+        <div class="poem-content">The Lord is my Campground Keeper,
+I shall not be without a Site.
+He maketh me to lie down at night in peace;
+He leadeth me over many happy trails,
+He rejuvenates my R.V. rig.
+He guideth me into opportunities of witness and se
+For his Name's sake.
+Yea, though I drive through rain and snow,
+I shall fear no breakdowns
+For Thou are with me.
+Thy Presence comforts me where ever I go.
+Thou prepareth a covered-dish meal before me
+In the company of many lost campers;
+My concern for them runneth over.
+Surely, safety and God's love
+Shall accompany me all my travel days,
+And I shall rest in Shady Dell campground forever.
+
+J. L. Hall    1992</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">WHEN THINGS GET TOUGH</h2>
+          <div class="poem-year">1992</div>
+        </header>
+        <div class="poem-content">A week without a job is weird,
+With all the Boogies we had feared,
+Of anxious days and sleepless nights
+And many imaginary frights.
+
+The Unemployed are all around
+As situations proved unsound,
+And folks are having second thoughts
+Of stuff they have and things they bought.
+
+A Debt is like a monstrous bear
+It bites and clings and tends to tear,
+There has to be a way to handle,
+Or life caves in like an empty sandal.
+
+Positions come and jobs may go
+When all activities seem so slow,
+And one is out of cash, and helpless
+He knows that things cannot be selfless.
+
+I wish that problems weren't so crummy
+And people's needs could turn to...yummy,
+But now reality takes its stand;
+Recession brings no friendly hand.
+
+If you are low, and cannot borrow,
+Just give a thought to other's sorrow,
+And know that you can beat bad weather
+For curcumstance is bound to better.
+
+Large sympathy is not enough,
+It doesn't solve one's needs and stuff;
+But nice it is to have a friend,
+When one tries hard to clear up sin.
+
+Go to the source of strength through prayer
+And give your days to comfort rare
+That comes from knowing you aren't bad
+It's by your spirit...glad or sad
+......That Changes happen in you!
+     God brings his miracles through!&quot;</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">PREACHER'S PROGRESS</h2>
+          <div class="poem-year">1992</div>
+        </header>
+        <div class="poem-content">Fifty years have come and passed,
+I lived them as a journey long,
+Ordained to preach in forty-two,
+My earlier task had been in song.
+
+In schools, I pastored humble folk
+They took me in to pastor them
+From cities to the farms widespread,
+I thundered sermons aimed at sin.
+
+I led in meetings on my way,
+Revivals helped augment my pay,
+Both country-side and city-wide
+I preached and sang, day after day.
+
+From church to church, and field to field
+I traveled with my faithful mate
+We found the doors all opened wide,
+We journeyed on from State to State.
+
+The middle years were joyous toil,
+We stayed the course toward larger work;
+Our family grew, and joined our chores
+The task was great, we did not shirk.
+
+Where have the years so quietly gone,
+Our sands of time are running out,
+Our limits close, as on we go,
+There's much to cheer, with booming shout!
+
+When we have come to end of day,
+And mourners ponder our demise,
+It's good to know our work lives on,
+And we, with Christ are set to rise.
+
+We now look back (and then, look down),
+Upon our journey swift and straight,
+All years were happy, hopeful, good--
+With no regrets---just Love, (not hate).</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">POEMS</h2>
+          <div class="poem-year">1995</div>
+        </header>
+        <div class="poem-content">At least one poem, once a year
+I've put on paper straight and clear,
+To put in concrete, words so pure
+With Truths that linger and endure
+
+Some poems can be like monuments,
+Or Rockets from their base, well sent,
+These thoughts from orbit soon reenter
+To place our lives well back on center.
+
+Some poems find their way to music
+And singers deft can all well use it
+A tune with poems, the message send
+To all the world; some ideas bend.
+
+Like all Ideas, some poems can prod
+A person's conscience up toward God;
+Or circumvent a Mind to Evil
+Thus give the reins o'er to the Devil.
+
+But mostly, Poems are made to bless
+Or cause the Wayward to confess,
+Thus lift the lonely souls to joy,
+Or prod, or comfort, or annoy.
+
+Tomorrow I'll write poetic lines,
+I will not have to pull the blinds
+My Mind across this century roams
+Reminding scores of its laughs and moans.
+
+Most any bloke can make lines rhyme
+But no one just the same as mine;
+I'll keep on writing verses cool
+For poems like mine are made to fool.
+
+For fun and pleasure, script so neat
+Can lift the spirit, and beat the heat.
+
+J. L. Hall  1995</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">IDEAS FOUND IN POEMS</h2>
+          <div class="poem-year">1995</div>
+        </header>
+        <div class="poem-content">At least one poem, once a year
+I've put on paper straight and clear,
+To put in concrete, words so pure
+With Truths that linger and endure
+
+Some poems can be like monuments,
+Or Rockets from their base well sent
+These thoughts from orbit soon reenter
+To place our lives well back on center.
+
+Some poems find their way to music
+And singers deft can all well use it
+A tune with poems, the message send
+To all the world, some ideas bend.
+
+Like all Ideas, some poems can prod
+A person's conscience up toward God;
+Or circumvent a Mind to Evil
+Thus give the reins o'er to the Devil.
+
+But mostly, Poems are made to bless
+Or cause the Wayward to confess,
+Thus lift the lonely souls to joy,
+Or prod, or comfort, or annoy.
+
+Tomorrow I'll write poetic lines,
+I will not have to pull the blinds
+My Mind across this century roams
+Reminding scores of its laughs and moans.
+
+Most any bloke can make lines rhyme
+But no one just the same as mine;
+I'll keep on writing verses cool
+For poems like mine are made to fool.
+For fun and pleasure, script so neat
+Can lift the spirit, and beat the heat.</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">HIS LOVE IS ETERNAL</h2>
+          
+        </header>
+        <div class="poem-content">Praise the Lord, for He is good,
+His love is everlasting,
+He gives the best unto his own
+And calls for prayer and fasting.
+
+Praise the Lord, for He is great,
+His love is all eternal:
+He wants to guide each one of us
+By his own grace supernal.
+
+Praise the Lord for He is pure,
+His love is strong forever:
+He seeks and saves and keeps his sheep,
+And He will leave us never.
+
+Praise the Lord for He is strong
+His love is there unending,
+He gives himself each day to us
+With grace, our spirits mending.
+
+So Praise, Exalt, and Lift His Name
+To realms of glory heights,
+We are so blest and favored here,
+His cares are our delights!
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">A SONG TO BETTY</h2>
+          
+        </header>
+        <div class="poem-content">What a pretty name you own.
+Love to say it on the phone.
+How it thrills my soul# to know
+That you belong to me.
+
+Everyday I dream of you.
+When you're near, I sing, 'tis true.
+As of Heaven, 'cause it's so
+That I belong to you.
+
+You have meant so much to me.
+It must ever this way be.
+Speed the good news, don't be slow
+That you belong to me.
+
+Oh the joy that's in your name.
+Beautiful, it stays the same.
+Stars may shout it all aglow
+That you belong to me.
+
+See your face come full alive.
+When I take you for a drive
+Robed in splendor, like rainbow...
+YES, you belong to me.
+
+Take my heart, it is your prize.
+All should know I idolize:
+I'll proclaim and shout and show
+That I belong to you.
+
+Your name just fits you like a glove.
+All people match it to your love.
+Heaven affirms me here below
+That you belong to me.
+
+CHORUS
+
+Though your name wasn't placed
+To music, before you,
+It'll now be immortal.
+Your heirs will adore you:
+
+But I ask (as I pray,
+Yet sweetly implore you...
+Always belong to me!
+
+(My Betty, you'll ever be)&quot;</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">In Absencia</h2>
+          
+        </header>
+        <div class="poem-content">The house is so empty and sad
+Because, the one who'd made it glad
+Is gone for these many days, far away.
+And I feel as though I'd been bad.
+
+That vacancy of house and of heart
+Brought lonely tears when I saw her depart:
+The time lingers on. I await call by phone.
+I find things to do at the Mart.
+
+I'll now sit and watch the TV.
+But there is so little to see:
+My mind wanders far, my reveries saw her.
+She's ever so precious to me.
+
+Time passes, and then from the blue
+Her presence! With &quot;How I missed you&quot;;
+Long hours were hard, I can't disregard
+The loneliness caused by dark hue.
+
+J L Hall  4/88</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">MY LOVE IS</h2>
+          
+        </header>
+        <div class="poem-content">My Love is like a rare rare jewel
+Reclining on the crest of fair;
+My Love is like an ocean breeze
+Wafting through her silken hair.
+
+My Love is like a mountain steam
+That sparkles like the dew.
+She laughs and talks to her heart's content.
+Her faults are very few.
+
+My Love is like a seasonal touch
+Of freshness, cool and sweet;
+I'll always know and remember her
+With the joy of each day I greet.
+
+9/89  J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THE PREACHER'S FAMILY (2)</h2>
+          
+        </header>
+        <div class="poem-content">Now Hal came next, and he was small
+He learned early his way to have.
+We endured his cries, on his hurts put salve
+And waited for the day he grew tall.
+
+Hal was our pal, and his future was bright,
+He made it in spite of his lack of sight
+And lived life straight, there was no din,
+He'd surely be champion of right.
+
+My wife's the one who outshone the sun,
+She was sweeter than honey plus sugar;
+My sacchrine gal, I just had to hug her,
+She's the happy one brimming with fun!</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">FIRST DAUGHTER'S FLIGHT</h2>
+          
+        </header>
+        <div class="poem-content">She was married some days ago.
+Daughter of mine, memory sublime:
+At the door she tarried, all aglow,
+Daughter so fine, kin and kind.
+
+A tear fell down and wet the floor,
+Child so bright, my great delight:
+&quot;Daddy I'm his, I'm yours no more&quot;,
+Child of light, such lovely sight.
+
+She bit her lip, and through those tears;
+Offspring close, on my side repose:
+She hugged me as if to make up for years,
+How she glows from head to toes.
+
+Away they flew o'er many a mile,
+A couple steady, amid confetti:
+And we were left with sigh and smile,
+For marriage they're ready...her name, Bette.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Temperance</h2>
+          
+        </header>
+        <div class="poem-content">By design to the kitchen I wandered;
+&quot;Need something to stick to my ribs.&quot;
+My Conscience was putting on pressure;
+(I hate to resort to my fibs).
+
+My lunch had been dainty, attractive;
+Had all the dietetic delights,
+But I'd gotten up limp and still hungry,
+I knew I'd be famished by night.
+
+So I found on the cabinet a cookie,
+Devoured it fast, as I grinned;
+Yet, standing on scales in the bathroom,
+I knew in my heart I had sinned.
+
+To eat, or not eat makes the difference
+Of how I shall look and shall feel,
+So I've planned for a Fast, with devotions,
+I'll cautiously approach my next meal.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">OUR REMARKABLE TREE</h2>
+          
+        </header>
+        <div class="poem-content">There's a tree that stood tall in our front yard.
+It could tell a wild tale, putting one on guard:
+A story of struggle, agony and hate
+Involving a neighbor with his need to berate.
+
+This story is one of a big Sycamore
+Showing all will be blessed by the beauty it bore.
+When out of the blue, this rascal complained...
+'Til the tree lay flat on the ground, all slain.
+
+Then only a stump remained there to show
+Of this tree that once shined bright with a glow:
+Now the reason you see, that it lost its place
+Was, the man took leaves as a shame-disgrace.
+
+Some leaves flew about when the wind blew hard.
+And sometimes they landed to mess up his yard:
+He agreed to pay, if the tree were down;
+He assented to this, but not without frown.
+
+Then he suddenly moved, leaving nothing behind
+Save a bare lone stump, that's all one could find
+Of our beautiful tree, so gracefully tall,
+A magnificent memory, here west of the Mall.
+
+Then what to our faintest of hopes could effect.
+The tree grew up strong, which we didn't expect.
+And today, as before, we're enjoying that tree
+That just wouldn't die...to our amazement and glee!</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Untitled</h2>
+          
+        </header>
+        <div class="poem-content">Remember the day that you had to &quot;stand by&quot;
+For the QRM of an RTTY?
+Maybe went to simplex, or quiet FM
+To get far away from the likes of him...
+
+Did you ever get into a cheap HI-FI
+Or give neighbors fits with your TVI?
+You didn't let them know your QTH
+But you quickly signed off with a sweet 88...
+
+Sometimes we got news from the QST
+T'was better by far, than from some CB.
+Old N. S. D. liked to gossip and nag
+But he sometimes helps, when it's not too much
+
+If you like the bands that are called H. F.
+You may not have time for the V.H.F.
+But, both must be better than all of that racket
+You hear up on &quot;two&quot;, called amateur Packet.
+
+Then maybe you tried the group called MARS.
+They're always so perfect with their SMR's.
+A &quot;Mayday&quot; from them would put out things in gear
+And we'd all work hard crisis times of us
+
+Other groups would join them, like the C.A.P.
+Some even fire up their SSTV's:
+Let's hope we don't have such an SOS.
+It could throw all our bands in a great big mess
+
+What can we then say of ARRL?
+They have used QST to serve us all well:
+I've enjoyed my Ticket from the FCC,
+How they've opened wide doors for you and for me
+
+So let us be glad whatever our Handle.
+And not let our hobby be part of some scandal
+Just use our rigs with their clean signals, sir
+And thank the Old Timers, that we can belong.
+
+Being part of a group that does public good
+On the local scene, and by Nations, understood
+For the pioneering work of our Amateur stations
+Doing tireless experiments in vast communications
+
+73's, and Standing</div>
+        <footer class="poem-footer">
+          <a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Untitled</h2>
+          
+        </header>
+        <div class="poem-content">Bo slept well that night and dreamed;
+Grunted, growled, as if one screamed;
+Ready he,to go again
+Always happy for a &quot;spin&quot;.
+
+Here's a tale that could go on
+From noon, then to the early dawn—
+Escapades and tricks and taunts,
+Bo made all the woodland haunts.
+
+Age crept on and Bo slowed down,
+Not so deft at making rounds,
+Lazy, no more springy bounce
+Sometimes—maybe—run and trounce.
+
+Then one night a car drove in,
+Bo, not agile, failed to spin;
+Caught beneath the wheel and rock
+Bo was injured, what a shock!
+
+Morning came, he lay there still—
+Peaceful, under window sill;
+Gently placed him to his rest,
+He had passed—the good-dog test.
+
+Bo is gone to memory land,
+No more can he lick our hand—
+Faithful friend for thirteen years,
+He is now beyond his fears
+
+In some moments of reflection
+Seems I catch a slight detection
+Of his bark, or see his shadow
+In a cloud o'er yonder meadow.
+
+Or his face in dancing leaves
+As if he still would like to tease;
+Bo will always be, in part,
+Wherever Poodles play and dart:</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Untitled</h2>
+          
+        </header>
+        <div class="poem-content">With a blush or a moan
+From some nudged-caused groan
+Of a jealous old flnae
+Who only could blame
+His loss on the ties.
+(Or for lack of a dime)
+That would treat the fair lass
+To juice in a glass.
+And from this...came harrass.
+
+At supper that night
+The family grouped right
+For a time of small sharing
+(Seldom anything daring).
+Just the morsels of food.
+Midst words seldom rude
+There were staples and drink
+With desert to the brink
+
+Of an appetite rawing.
+(It lessened our craving).
+The old table and benches
+All tight from Dad's wrenches.
+For all eight. we assume
+In a small breakfast room.
+Or the middle of kitchen
+Which all could there sit in.
+In Egglebert. the Ford
+The kids climbed aboard
+To join in the fun
+In the late Autumn sun.
+And ride &quot;round the block&quot;.
+Or down to the dock
+At railroad and Rock.
+Where we paused to check clock.
+Then race back to greet
+The girls cute and sweet
+Clad in dresses with pleats
+Near the house on High Street.
+
+We never sensed wrongs
+As we sang aloud songs
+(Such music belongs
+In those turbulent songs
+Of the times of depression).
+It seemed joyful expression. as...
+&quot;Our boy went away
+For a very long stay.</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Untitled</h2>
+          
+        </header>
+        <div class="poem-content">Like working combination
+With great jubilation
+Enjoying the &quot;lark&quot;,
+On up until dark:
+Then on to a show,
+Cowboys on the go.
+Next an ice-cream cone,
+(fun down to the bone).
+In a spirit so jolly
+We caught the south trolley
+And called it a day
+As we went on our way
+Toward the place so neat,
+Our house on High Street.
+
+Saturdays and summer
+Were never a bummer
+For kids on the prowl,
+Who wanted to howl.
+The options were many
+For &quot;Tubby&quot; and &quot;Skinny&quot;
+At times we could take
+A trip to the lake,
+And enjoy a swim,
+Or fish there for brim.
+We could slide or ride bikes,
+Or take memorable hikes,
+Rolling tires by the hour,
+Making &quot;hides&quot; in the bower,
+Then build a small boat,
+Hoping it would sure float,
+And run to the woods,
+Maybe run into &quot;hoods&quot;,
+Or build a club house,
+Or catch a pet mouse.
+Then the mulberry tree
+With climbing so free
+Was a challenge for all,
+The short and the tall.
+
+Our dog Friskie at play
+Could make a keen day,
+And a soda pop cool
+Would make us all drool.
+We'd go watch the train,
+(It could addle one's brain),</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THE GATHERING YEARS</h2>
+          
+        </header>
+        <div class="poem-content">When wife and I are old and gray,
+We'll look at pictures and laugh and say,
+&quot;Wasn't it nice in the good old days
+When we did things in the good old ways?&quot;
+
+Then she'll turn to me and press my hand,
+And look in my eyes as only she can,
+And I'll know in a moment she'll reminisce
+While summing it up with a tender kiss
+
+I know her so well, she loves those days
+When we did things in the good old ways,
+And it's nice we go to travel the backward road,
+To review and enjoy each episode.
+
+The journey grows shorter each passing day
+And soon, today is the good old way,
+So I'll take each epoch and enjoy it's fate,
+Then remember tomorrow...how today can elate.
+
+When Providence parts us, as surely He will,
+And one of us only remains here still;
+We can hold to the moments and hours and days,
+And feast on the joys of the good old ways.</div>
+        <footer class="poem-footer">
+          <a href="tag-love.html" class="poem-tag ">love</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a><a href="tag-comfort.html" class="poem-tag ">comfort</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">FOURTH OF JULY</h2>
+          
+        </header>
+        <div class="poem-content">Booms and bangs! Sparkles and lights!
+Reminds us today of those far away fights:
+It's July fourth, and the memory lingers
+Of picnics and fun, and food on our fingers.
+
+Trips to the creek in our old lumber truck,
+Rain on the roof: Leaks fit for a duck:
+With friends and games and watermelon, too,
+'Twas all in the family, with something to do.
+
+This holiday comes (and O how we need 'em)
+As the fourth of July speaks loudly of freedom,
+And the recent-most war, with heros to praise
+At dusk, to the bonfire we all turned our gaze.
+
+Fishing and ball games and soda pop too,
+With shouting and laughing, and maybe a Moo
+From an old cow nearby to startle a few:
+The day passed to night, in colorful hue.
+
+No day like that day in mid-summer heat,
+The Clan as a whole got into the feat,
+Then we packed it all up, put the truck into gear,
+Remembering, then planning ahead for next year.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Untitled</h2>
+          
+        </header>
+        <div class="poem-content">There is a church by the river
+at Heber Springs
+Where Spring flowers bloom and
+the bright bird sings
+This church is a hundred years
+old
+And many are the stories that
+could be told
+Of joys and hard-ship and sorrow
+too
+As the little band struggled the
+long years through
+To teach the Word and win
+the lost
+And minister to suffering whatever
+the cost
+With a humble beginning in Eighty
+Five
+not a charter member is now alive
+
+Several buildings have served in
+this place
+Where now a beautiful new one stands
+in beauty and grace
+The folks there are friendly and
+will greet you at the door
+So you'll be coming more and more
+The choir sings the songs of
+faith with melody and grace
+The Holy Spirit may be in
+this place
+And the pastor is happy as
+he announces for all to hear
+And he preaches the Word without
+any fear
+So why not join us as we
+gather in this place
+To hear the Word and seek
+His face</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THANKS FOR THE GOOD TIME</h2>
+          
+        </header>
+        <div class="poem-content">To receive your present
+Just gave a big smile
+It'll be a gift
+To last a long while.
+
+We'll meet at Olan's
+At precisely eleven
+There's a group of us now
+Where once there was seven.
+
+Years will come and also go
+And others added to the fold
+Let's make a date and do it again
+To see what we all look like then
+How good the year at all got together.
+Christmas '80, could not have been better.
+
+Lydia Goode</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">Little Girl Dreams</h2>
+          
+        </header>
+        <div class="poem-content">There'll be lots of joy in Toyland.
+In that special girl and boy-land.
+Where Little Boy Blue. repeats &quot;I do&quot;.
+When Little Girl's weddings on her day.
+On our little girl's wedding day.
+
+Jack and Jill, Mother Goose are invited.
+Goldilocks and Bo Peep are delighted.
+While Winnie the Pooh will be there too.
+On our little girl's wedding day.
+
+Humpty Dumpty will be the Parson.
+Santa Claus gives the bride away.
+And Old King Cole, is the best man told.
+While his three Fiddlers play.
+
+In a cottage of cake and ice-cream.
+Every dream will be a nice dream.
+And the bells will ring, as the Angels sing.
+Along the Milky Way, in Toyland.
+On our little girl's wedding day.
+
+adapted</div>
+        <footer class="poem-footer">
+          <a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">FIFTY-TWO HYMN TITLES</h2>
+          
+        </header>
+        <div class="poem-content">I WAS SINKING DEEP IN SIN
+I COULD HEAR MY SAVIOR SAY
+TAKE UP THY CROSS- GIVE ME THY HEART
+ABIDE WITH ME TODAY.
+BELIEVE ON THE LORD JESUS CHRIST
+GOD WILL TAKE CARE OF YOU
+SOFTLY AND TENDERLY- JESUS IS CALLING
+BLESSED ASSURANCE - I WOULD BE TRUE.
+ONCE AND FOR ALL - I WAS SAVED BY THE BLOOD
+WHOSOEVER WILL MAY COME
+YIELD NOT TO TEMPTATION,FRIEND
+JESUS NEVER FAILS - NO NOT ONE
+ART THOU WEARY AND HEAVY LADEN
+LET JESUS COME INTO YOUR HEART
+HE'S SWEETER AS THE YEARS GO BY
+ALMIGHTY FATHER - HOW GREAT THOU ART.
+FROM EVERY STORMY WIND THAT BLOWS
+FAITH IS THE VICTORY
+AT THE CROSS - ON A HILL FAR AWAY
+JESUS PAID IT ALL - AT CALVARY
+MY SINS ARE BLOTTED OUT I KNOW
+SINCE JESUS CAME INTO MY HEART
+WITH THANKFUL HEARTS O LORD WE COME
+WHILE SHEPHERDS WATCH THEIR FLOCK.
+HE LIVES - TAKE TIME TO BE HOLY
+LET US WITH A GLADSOM WIND
+WORK FOR THE NIGHT IS COMING
+JESUS BIDS US SHINE.
+WHEN THE ROLL IS CALLED UP YONDER
+WILL THERE BE ANY STARS IN YOUR CROWN
+WILL JESUS FIND US WATCHING
+IN THE GARDEN - ON HIGHER GROUND.
+WE WOULD SEE JESUS - HE'S COMING AGAIN
+WHAT IF IT WERE TODAY
+MUST I GO EMPTY HANDED
+NOT IF I TRUST AND OBEY
+OH HAPPY DAY - I'VE FOUND A FRIEND
+REJOICE THE LORD IS KING
+MAY THE GRACE OF CHRIST BE WITH YOU ALL
+UNTIL WE MEET AGAIN-</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-love.html" class="poem-tag ">love</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">RE-MEMORY</h2>
+          
+        </header>
+        <div class="poem-content">I caught it in a snapshot,
+Preserved it in a song,
+Held it in a bit of verse
+As time rolled on along.
+
+Experiences are hard to hold,
+Events elude the mind,
+Impressions flee away so fast
+They're later hard to find.
+
+The &quot;book&quot; ones linger on awhile
+Depending on who's in it,
+The told ones no one can recall
+Much like the name of &quot;Emmett&quot;.
+
+So if you want fond memory
+You'll have to sweat and bear it:
+&quot;Association&quot; helps retain--
+On paper, you might tear it.
+
+Best memories are the ones that come
+When all alone you dream,
+But if your reverie's disturbed
+You'll likely &quot;up and scream&quot;.
+
+To share a blast remembered trick
+Brings happy-like reaction;
+If He's included in the tale
+'Twill all be satisfaction.
+
+J. L. Hall</div>
+        <footer class="poem-footer">
+          <a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-service.html" class="poem-tag ">service</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">THOUGHTS FOR TALENT NIGHT</h2>
+          
+        </header>
+        <div class="poem-content">There comes a time in the course of a day
+That one must learn there's a way, and a way
+One must travel along lifes' journey afar
+And fasten ones' Hope on a distant star-
+
+That star is the goal for the end of time
+And all folks will choose, (friends of yours &amp; mine)
+The way one goes will reveal a lot
+About a person, and how his life He'll plot-
+
+One way to travel is so sure and smooth
+It's hard to judge why some miss the &quot;groove&quot;
+And not see the light of Eternal day-
+But I'm glad many friends have found that way.
+
+The other road twists and curves and bends
+As if one were tossed to and fro by the winds;
+This careless choice will end in ruin
+And the torture is worse than the heat of the sun-
+
+As you start lifes' journey, which way will you go?
+It matters a lot, meaning joy-- or woe;
+I believe somehow, you'll make the right choice
+And then you can always, and forever rejoice!
+
+by Dr. J. L. Hall
+5/23/88</div>
+        <footer class="poem-footer">
+          <a href="tag-faith.html" class="poem-tag ">faith</a><a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-family.html" class="poem-tag ">family</a><a href="tag-reflection.html" class="poem-tag ">reflection</a><a href="tag-hope.html" class="poem-tag ">hope</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+<div class="page-divider">· · ·</div>
+
+      <article class="poem-card">
+        <header class="poem-header">
+          <h2 class="poem-title">What Is Orange?</h2>
+          
+        </header>
+        <div class="poem-content">Orange is a tiger lily, a carrot.
+A feather from a parrot.
+Orange is a flame,
+The wildest color you can name.
+Orange is a happy day saying
+goodbye
+In a sunset that shocks the sky.
+Orange is zip, orange is dash,
+The brightest stripe in a Roman sash.
+Orange is the fur of a fiery fox,
+The brightest crayon in the box.
+In the fall when the leaves are turning,
+Orange is the smell of a bonfire
+burning.
+
+Carrie Besser    Age 11
+Cleveland, Oklahoma</div>
+        <footer class="poem-footer">
+          <a href="tag-nature.html" class="poem-tag ">nature</a><a href="tag-life.html" class="poem-tag ">life</a><a href="tag-joy.html" class="poem-tag active">joy</a>
+        </footer>
+      </article>
+    
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-ornament">❧ ❧ ❧</div>
+      <p>The poetry of J. Leland Hall</p>
+      <p>Clarksville, Arkansas</p>
+    </footer>
+  </div>
+</body>
+</html>
