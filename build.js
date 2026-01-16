@@ -1224,7 +1224,7 @@ const html = `<!DOCTYPE html>
 
   <header class="site-header">
     <h1 class="site-title">A Melody of Thought</h1>
-    <p class="author-line">J. Leland Hall · Clarksville, Arkansas · 1942–1995</p>
+    <p class="author-line">J. Leland Hall · 1942–1995</p>
   </header>
 
   <nav class="main-nav">
