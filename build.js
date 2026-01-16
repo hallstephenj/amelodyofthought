@@ -1206,7 +1206,6 @@ const html = `<!DOCTYPE html>
 
   <nav class="main-nav">
     <button class="nav-btn active" data-view="poems">Poems</button>
-    <button class="nav-btn" data-view="gallery">Manuscripts</button>
     <button class="nav-btn" data-view="about">About</button>
   </nav>
 
