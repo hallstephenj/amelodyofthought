@@ -1,7 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read poems data
+// Read poems data from the main tagged source file
+const taggedPoemsPath = path.join(__dirname, '..', 'melody-of-thought-poems-final.json');
+const taggedPoems = JSON.parse(fs.readFileSync(taggedPoemsPath, 'utf8'));
+
+// Build a lookup map for tags by title+year
+const tagLookup = {};
+for (const poem of taggedPoems) {
+  const key = `${poem.title || 'Untitled'}::${poem.year || ''}`;
+  tagLookup[key] = poem.tags || [];
+}
+
+// Read poems data (for image mapping)
 const poemsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'poems.json'), 'utf8'));
 
 // Extract all poems into a flat array
@@ -10,8 +21,13 @@ const poems = [];
 for (const [imageKey, poemList] of Object.entries(poemsData)) {
   for (const poem of poemList) {
     if (poem.content && poem.content.trim()) {
+      // Look up tags from the tagged source file
+      const key = `${poem.title || 'Untitled'}::${poem.year || ''}`;
+      const sourceTags = tagLookup[key] || [];
+
       poems.push({
         ...poem,
+        sourceTags, // Tags from the main file
         sourceImage: imageKey,
         id: poems.length + 1
       });
@@ -119,7 +135,9 @@ function getPreview(content, maxLen = 80) {
 
 // Process poems
 const processedPoems = poems.map((poem, idx) => {
-  const tags = tagPoem(poem);
+  // Use source tags from the main file, falling back to auto-generated tags
+  const autoTags = tagPoem(poem);
+  const tags = poem.sourceTags && poem.sourceTags.length > 0 ? poem.sourceTags : autoTags;
   const year = parseYear(poem.year);
   return {
     ...poem,
