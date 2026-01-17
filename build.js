@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Read poems data from the main tagged source file
-const taggedPoemsPath = path.join(__dirname, '..', 'melody-of-thought-poems-final.json');
+const taggedPoemsPath = path.join(__dirname, 'melody-of-thought-poems-final.json');
 const taggedPoems = JSON.parse(fs.readFileSync(taggedPoemsPath, 'utf8'));
 
 // Build a lookup map for tags by title+year
